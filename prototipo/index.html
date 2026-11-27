@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rádio Fourier · Fiat Toro</title>
+<link rel="stylesheet" href="estilo.css">
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+ <symbol id="i-radio" viewBox="0 0 32 32"><path d="M9 18a9 9 0 0 1 0-12m14 0a9 9 0 0 1 0 12M12 15a5 5 0 0 1 0-6m8 0a5 5 0 0 1 0 6"/><circle cx="16" cy="12" r="2" fill="currentColor"/><path d="m11 26 5-14 5 14m-8-5h6"/></symbol>
+ <symbol id="i-musica" viewBox="0 0 32 32"><path fill="currentColor" stroke="none" d="M24 3 11 6v15c-1-.5-2.5-.4-4 .2-2.8 1-4.3 3.5-3.4 5.7.8 2.1 3.8 2.7 6.5 1.6 2.3-.9 3.7-2.5 3.7-5V11l8-2v9c-1-.5-2.4-.4-3.8.1-2.8 1-4.3 3.6-3.5 5.6.9 2.2 3.8 2.8 6.6 1.7 2.2-.8 3.9-2.5 3.9-4.9V4c0-.7-.3-1.1-1-1Z"/></symbol>
+ <symbol id="i-gps" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11" fill="#2586ef" stroke="white" stroke-width="1.4"/><path d="m16 7 6 16-6-4-6 4Z" fill="white" stroke="none"/></symbol>
+ <symbol id="i-email" viewBox="0 0 32 32"><rect x="3" y="7" width="26" height="19" rx="3" fill="white" stroke="none"/><path d="m4 9 12 9L28 9" stroke="#3089e9"/></symbol>
+ <symbol id="i-apps" viewBox="0 0 32 32"><path fill="currentColor" stroke="none" d="M4 4h10v10H4zm14 0h10v10H18zM4 18h10v10H4zm14 0h10v10H18z"/></symbol>
+ <symbol id="i-exit" viewBox="0 0 32 32"><path d="M15 6H6v20h9m-1-10h13m-5-5 5 5-5 5"/></symbol>
+ <symbol id="i-play" viewBox="0 0 32 32"><path d="m10 6 16 10-16 10Z" stroke="none" fill="currentColor"/></symbol>
+ <symbol id="i-pause" viewBox="0 0 32 32"><path d="M10 7v18m12-18v18" stroke-width="5"/></symbol>
+ <symbol id="i-volume" viewBox="0 0 32 32"><path d="M4 13h5l7-6v18l-7-6H4zm17-2q5 5 0 10m4-14q9 9 0 18"/></symbol>
+ <symbol id="i-arrow" viewBox="0 0 32 32"><path d="m13 9 7 7-7 7"/></symbol>
+</defs></svg>
+<header><div class="brand"><span class="brandmark" aria-hidden="true">▂▅█▅▂</span> Rádio Fourier</div><div class="model">FIAT <b>TORO</b> <span>2026</span></div></header>
+<main id="cabine" aria-label="Interior da Fiat Toro">
+ <div id="view"><div id="cam"><img src="assets/toro-laboratorio.png" alt="Vista da cabine da Fiat Toro estacionada em um laboratório de mecânica, com uma bancada de ferramentas à frente" draggable="false"><div class="windshield" aria-hidden="true"></div></div>
+ <div id="glass"><section id="screen" aria-label="Central multimídia" inert>
+   <nav class="dock" aria-label="Atalhos da central">
+     <time id="clock"></time>
+     <div class="shortcuts">
+       <button data-app="radio" aria-label="Rádio" title="Rádio"><span class="appicon radioicon"><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg></span></button>
+       <button data-app="musica" aria-label="Música" title="Música"><span class="appicon musicaicon"><svg class="icon" aria-hidden="true"><use href="#i-musica"/></svg></span></button>
+       <button data-app="gps" aria-label="GPS" title="GPS"><span class="appicon gpsicon"><svg class="icon" aria-hidden="true"><use href="#i-gps"/></svg></span></button>
+     </div>
+     <button id="apps" aria-label="Menu de aplicativos" title="Aplicativos"><svg class="icon" aria-hidden="true"><use href="#i-apps"/></svg></button>
+   </nav>
+   <div class="workspace">
+     <div class="status"><span>FIAT</span><button id="exit" title="Voltar ao carro" aria-label="Voltar ao carro">Cabine <svg class="icon" aria-hidden="true"><use href="#i-exit"/></svg></button></div>
+     <div id="home">
+       <h1>Aplicativos</h1>
+       <div class="grid">
+         <button data-app="radio"><span class="appicon radioicon"><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg></span><span>Rádio</span></button>
+         <button data-app="musica"><span class="appicon musicaicon"><svg class="icon" aria-hidden="true"><use href="#i-musica"/></svg></span><span>Música</span></button>
+         <button data-app="gps"><span class="appicon gpsicon"><svg class="icon" aria-hidden="true"><use href="#i-gps"/></svg></span><span>GPS</span></button>
+         <button data-app="email"><span class="appicon emailicon"><svg class="icon" aria-hidden="true"><use href="#i-email"/></svg></span><span>E-mail</span></button>
+       </div>
+       <button class="resume" data-app="radio"><span class="mini-band"><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg></span><span><small id="now">Última sintonia</small><strong id="nowName">Rádio UEMA</strong></span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+     </div>
+     <article id="radio" hidden>
+       <div class="radio-heading"><h1>Rádio</h1><button id="openLab" aria-haspopup="dialog">Visualizar Fourier ↗</button></div>
+       <div class="station"><div><span class="kicker" id="stationName">Rádio UEMA</span><div class="frequency"><strong id="freq">8</strong> <span>kHz</span></div></div>
+       <button id="play" aria-label="Ouvir estação" title="Ouvir estação"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg></button></div>
+       <div class="track-strip"><img id="trackArt" alt=""><div><h2 id="trackName"></h2><span id="trackCredit"></span></div></div>
+       <figure class="tuner"><figcaption><span>Espectro FFT</span><span id="band"></span></figcaption>
+       <canvas id="spectrum" width="488" height="120" role="img" aria-label="Espectro da mistura"></canvas>
+       <div class="scale" aria-hidden="true"><span>4</span><span>8</span><span>12</span><span>16</span><span>20 kHz</span></div></figure>
+       <h3>Estações</h3><div class="presets">
+         <button data-id="0" aria-pressed="true"><span class="channel">01</span>UEMA<small>8 kHz</small></button>
+         <button data-id="1" aria-pressed="false"><span class="channel">02</span>Horizonte<small>16 kHz</small></button>
+       </div>
+       <div class="volume"><label for="vol" aria-label="Volume"><svg class="icon" aria-hidden="true"><use href="#i-volume"/></svg></label><input id="vol" aria-label="Volume" type="range" min="0" max="100" value="65"><output for="vol">65%</output></div>
+       <p id="msg" role="status">Pronto para ouvir</p>
+     </article>
+     <article id="extra" hidden><h1 id="extraName"></h1><div id="extraBody"></div></article>
+   </div>
+ </section></div>
+ <button id="enter" aria-label="Aproximar e abrir a central multimídia"><span>Abrir multimídia</span></button>
+ </div>
+ <div class="caption"><span>FIAT TORO VOLCANO</span><h2>Interior da Toro</h2></div>
+</main>
+<footer><span id="location">Cabine</span><span>Simulador de rádio <b> / </b> Transformada de Fourier</span></footer>
+<dialog id="lab" aria-labelledby="labTitle">
+ <div class="lab-shell">
+   <div class="lab-title"><h2 id="labTitle">Laboratório de Fourier</h2><button id="closeLab" autofocus>Voltar ao rádio</button></div>
+   <nav class="lab-steps" aria-label="Etapas de Fourier">
+     <button data-step="0">1 · Mistura</button><button data-step="1">2 · FFT</button>
+     <button data-step="2">3 · Filtro</button><button data-step="3">4 · Áudio</button>
+   </nav>
+   <div class="lab-player"><div class="lab-track"><img id="labArt" alt=""><div><strong id="labTrack"></strong><small id="labCredit"></small></div></div>
+   <div class="lab-controls" role="group" aria-label="Sintonia da apresentação">
+     <button data-id="0">UEMA · 8 kHz</button><button data-id="1">Horizonte · 16 kHz</button>
+     <button id="labPlay">Ouvir estação</button>
+   </div></div>
+   <div class="live-readings" aria-label="Medições da reprodução">
+    <div><small>Reprodução</small><strong id="transport">Em pausa</strong></div>
+    <div><small>Tempo da faixa</small><strong id="elapsed">0:00,0</strong></div>
+    <div><small>Pico do áudio</small><strong id="pitch">—</strong></div>
+    <div><small>Sintonia</small><strong id="carrierReading">8 kHz</strong></div>
+   </div>
+   <section class="lab-stage">
+     <h3 id="stageName"></h3><p id="stageNote"></p>
+     <figure><figcaption id="plotLabel"></figcaption><canvas id="labPlot" role="img" aria-labelledby="plotLabel stageNote"></canvas></figure>
+     <figure id="comparison" hidden><figcaption id="afterLabel"></figcaption><canvas id="afterPlot" role="img" aria-labelledby="afterLabel stageNote"></canvas></figure>
+   </section>
+   <div class="lab-pager"><button id="prevStage">← Anterior</button><span id="stageCount"></span><button id="nextStage">Próxima →</button></div>
+ </div>
+</dialog>
+<script src="sinal.js"></script><script src="musicas.js"></script><script src="programacao.js"></script><script src="interface.js"></script><script src="graficos.js"></script>
+</body></html>
