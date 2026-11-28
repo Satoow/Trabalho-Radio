@@ -42,19 +42,22 @@
        <button class="resume" data-app="radio"><span class="mini-band"><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg></span><span><small id="now">Última sintonia</small><strong id="nowName">Rádio UEMA</strong></span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
      </div>
      <article id="radio" hidden>
-       <div class="radio-heading"><h1>Rádio</h1><button id="openLab" aria-haspopup="dialog">Visualizar Fourier ↗</button></div>
+       <section id="radioChoices" aria-labelledby="chooseTitle">
+         <h1 id="chooseTitle">Rádio</h1><p>Escolha uma estação</p>
+         <button class="band-card fm" data-choice="1"><img src="assets/frei.jpg" alt=""><span><strong>FM</strong><b>Rádio Horizonte</b><small>Frei Jacques</small></span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+         <button class="band-card am" data-choice="0"><img src="assets/ode.jpg" alt=""><span><strong>AM</strong><b>Rádio UEMA</b><small>Ode à Alegria</small></span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+       </section>
+       <section id="radioPlayer" aria-label="Reprodutor da estação" hidden>
+       <div class="radio-heading"><button id="backBands">‹ Estações</button><button id="openLab" aria-haspopup="dialog">Visualizar Fourier ↗</button></div>
        <div class="station"><div><span class="kicker" id="stationName">Rádio UEMA</span><div class="frequency"><strong id="freq">8</strong> <span>kHz</span></div></div>
        <button id="play" aria-label="Ouvir estação" title="Ouvir estação"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg></button></div>
        <div class="track-strip"><img id="trackArt" alt=""><div><h2 id="trackName"></h2><span id="trackCredit"></span></div></div>
        <figure class="tuner"><figcaption><span>Espectro FFT</span><span id="band"></span></figcaption>
        <canvas id="spectrum" width="488" height="120" role="img" aria-label="Espectro da mistura"></canvas>
        <div class="scale" aria-hidden="true"><span>4</span><span>8</span><span>12</span><span>16</span><span>20 kHz</span></div></figure>
-       <h3>Estações</h3><div class="presets">
-         <button data-id="0" aria-pressed="true"><span class="channel">01</span>UEMA<small>8 kHz</small></button>
-         <button data-id="1" aria-pressed="false"><span class="channel">02</span>Horizonte<small>16 kHz</small></button>
-       </div>
        <div class="volume"><label for="vol" aria-label="Volume"><svg class="icon" aria-hidden="true"><use href="#i-volume"/></svg></label><input id="vol" aria-label="Volume" type="range" min="0" max="100" value="65"><output for="vol">65%</output></div>
        <p id="msg" role="status">Pronto para ouvir</p>
+       </section>
      </article>
      <article id="extra" hidden><h1 id="extraName"></h1><div id="extraBody"></div></article>
    </div>
@@ -73,19 +76,24 @@
    </nav>
    <div class="lab-player"><div class="lab-track"><img id="labArt" alt=""><div><strong id="labTrack"></strong><small id="labCredit"></small></div></div>
    <div class="lab-controls" role="group" aria-label="Sintonia da apresentação">
-     <button data-id="0">UEMA · 8 kHz</button><button data-id="1">Horizonte · 16 kHz</button>
+     <button data-id="0">AM · UEMA</button><button data-id="1">FM · Horizonte</button>
      <button id="labPlay">Ouvir estação</button>
    </div></div>
    <div class="live-readings" aria-label="Medições da reprodução">
     <div><small>Reprodução</small><strong id="transport">Em pausa</strong></div>
     <div><small>Tempo da faixa</small><strong id="elapsed">0:00,0</strong></div>
-    <div><small>Pico do áudio</small><strong id="pitch">—</strong></div>
-    <div><small>Sintonia</small><strong id="carrierReading">8 kHz</strong></div>
+    <div><small>Pico da música agora</small><strong id="pitch">—</strong></div>
+    <div><small>Portadora da estação</small><strong id="carrierReading">8 kHz</strong></div>
    </div>
    <section class="lab-stage">
+     <div class="station-context"><p id="frequencyNote"></p><button id="compareNow">Comparar AM e FM neste instante</button></div>
      <h3 id="stageName"></h3><p id="stageNote"></p>
-     <figure><figcaption id="plotLabel"></figcaption><canvas id="labPlot" role="img" aria-labelledby="plotLabel stageNote"></canvas></figure>
-     <figure id="comparison" hidden><figcaption id="afterLabel"></figcaption><canvas id="afterPlot" role="img" aria-labelledby="afterLabel stageNote"></canvas></figure>
+     <figure><figcaption id="plotLabel"></figcaption><span class="point-reading"></span><canvas id="labPlot" role="img" aria-labelledby="plotLabel stageNote"></canvas></figure>
+     <figure id="comparison" hidden><figcaption id="afterLabel"></figcaption><span class="point-reading"></span><canvas id="afterPlot" role="img" aria-labelledby="afterLabel stageNote"></canvas></figure>
+     <figure id="fmComparison" hidden><figcaption id="fmLabel">Saída FM · Magnitude (dBFS) × frequência (kHz)</figcaption><span class="point-reading"></span><canvas id="fmPlot" role="img" aria-labelledby="fmLabel"></canvas></figure>
+     <button id="revealOutputs" hidden>Revelar as duas saídas</button>
+     <div class="probe"><label for="probePosition">Cursor de leitura</label><input id="probePosition" type="range" min="0" max="1024" value="341"></div>
+     <details class="calculation" open><summary>Cálculo desta etapa</summary><div id="calculationBody"><strong id="calcTitle"></strong><div id="calcFormula"></div><p id="calcExplain"></p><p id="cursorMath"></p></div></details>
    </section>
    <div class="lab-pager"><button id="prevStage">← Anterior</button><span id="stageCount"></span><button id="nextStage">Próxima →</button></div>
  </div>

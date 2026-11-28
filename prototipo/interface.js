@@ -1,6 +1,7 @@
 const $ = selector => document.querySelector(selector);
 const cabin = $('#cabine'), screenUI = $('#screen'), enter = $('#enter');
 const names = ['Rádio UEMA', 'Rádio Horizonte'];
+const modes = ['AM','FM'];
 let zoomed = false, station = 0, app = 'home';
 let ctx, gain, mix, audioSource, startedAt = 0, offset = 0, ticket = 0;
 const recovered = [];
@@ -47,7 +48,8 @@ function position() {
 function drawSpectrum(index=Math.floor(position()*RadioDSP.fs)) {
   if (!mix) return;
   const canvas=$('#spectrum'), pen=canvas.getContext('2d');
-  const {width,height}=canvas, {carriers,bandwidth,fs,frameSize}=RadioDSP;
+  const {width,height}=canvas, {carriers,halfBands,fs,frameSize}=RadioDSP;
+  const bandwidth=halfBands[station];
   const fc=carriers[station], low=4000, high=20000;
   const values=RadioDSP.analyze(mix.samples,index);
   const pixel=hz=>(hz-low)*width/(high-low);
@@ -97,8 +99,31 @@ cabin.addEventListener('pointermove', e => {
 cabin.addEventListener('pointerleave', () => look());
 headMotion.addEventListener('change', () => look());
 function focusApp() {
-  (app === 'home' ? $('.grid [data-app="radio"]') : app === 'radio' ? $('#play') : $('#apps')).focus({preventScroll:true});
+  const radioControl = $('#radioPlayer').hidden ? $('[data-choice]') : $('#backBands');
+  (app === 'home' ? $('.grid [data-app="radio"]') : app === 'radio' ? radioControl : $('#apps')).focus({preventScroll:true});
 }
+function showBands() {
+  offset=position();
+  ++ticket;
+  stopAudio();
+  $('#radioChoices').hidden=false;
+  $('#radioPlayer').hidden=true;
+  $('#play').disabled=!!preparing && !mix;
+  update(); focusApp();
+}
+$('#backBands').onclick=showBands;
+document.querySelectorAll('[data-choice]').forEach(button => {
+  button.onclick=()=>{
+    const next=Number(button.dataset.choice);
+    if (station!==next) offset=0;
+    station=next;
+    $('#radioChoices').hidden=true;
+    $('#radioPlayer').hidden=false;
+    if (mix) $('#msg').textContent='Pronto para ouvir';
+    loadBroadcast(); update(); drawSpectrum();
+    ($('#play').disabled ? $('#backBands') : $('#play')).focus({preventScroll:true});
+  };
+});
 function zoom(on) {
   look();
   zoomed = on;
@@ -134,18 +159,18 @@ function openApp(next) {
     $('#extraName').textContent = 'Música'; body.textContent = 'Sua biblioteca está vazia.';
   }
   update();
-  if (app === 'radio') { loadBroadcast(); drawSpectrum(); }
+  if (app === 'radio') { showBands(); loadBroadcast(); }
   focusApp();
 }
 document.querySelectorAll('[data-app]').forEach(b => b.onclick = () => openApp(b.dataset.app));
 $('#apps').onclick = () => openApp('home');
 function update() {
-  $('#stationName').textContent = names[station];
+  $('#stationName').textContent = modes[station]+' · '+names[station];
   const track = tracks[station];
   for(const element of [$('#trackArt'),$('#labArt')]) element.src=track.cover;
   $('#trackName').textContent=$('#labTrack').textContent=track.title;
   $('#trackCredit').textContent=$('#labCredit').textContent=track.credit+' · '+track.instrument;
-  $('#carrierReading').textContent=RadioDSP.carriers[station]/1000+' kHz';
+  $('#carrierReading').textContent=modes[station]+' · '+RadioDSP.carriers[station]/1000+' kHz';
   $('#transport').textContent=audioSource?'Ao vivo':'Em pausa';
   $('#lab').classList.toggle('on-air',!!audioSource);
   $('#lab').dataset.station=station;

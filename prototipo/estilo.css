@@ -190,3 +190,54 @@ footer{color:#babfc4;border-top:1px solid #393c3f;font-size:13px}footer b{color:
   .live-readings small { font-size:11px; }
   .live-readings strong { font-size:15px; }
 }
+
+#radioChoices { padding-top:18px; }
+#radioChoices h1 { font-size:34px; }
+#radioChoices > p { margin:5px 0 22px; color:#bec6c9; font-size:15px; }
+.band-card {
+  --ink:#ffc69f; display:grid; width:100%; grid-template-columns:60px 1fr 15px;
+  align-items:center; gap:12px; text-align:left; margin:0 0 12px; padding:16px 12px;
+  border:1px solid #4a3d37; border-radius:14px; background:linear-gradient(115deg,#342c28,#222426);
+}
+.band-card.am { --ink:#bae6fd; border-color:#354852; background:linear-gradient(115deg,#24343e,#202428); }
+.band-card:hover { border-color:var(--ink); }
+.band-card img { width:60px; height:68px; object-fit:cover; border-radius:6px; }
+.band-card span { display:grid; gap:3px; }
+.band-card strong { color:var(--ink); font-size:27px; letter-spacing:-1px; line-height:1; }
+.band-card b { font-size:15px; }
+.band-card small { color:#cad1d4; font-size:12px; }
+.band-card .icon { color:var(--ink); width:15px; }
+.radio-heading { margin:10px 0 12px; }
+#backBands { padding:8px 0; font-size:14px; font-weight:600; }
+#openLab { color:var(--accent); min-height:34px; }
+.track-strip { padding-top:6px; padding-bottom:14px; }
+.track-strip img { width:52px; height:52px; }
+.lab-stage figure { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:baseline; gap:5px 12px; }
+.lab-stage figcaption { margin:0; font-size:14px; }
+.point-reading { color:#f6e8bd; font:12px/1.4 Consolas,monospace; font-variant-numeric:tabular-nums; }
+.lab-stage canvas { grid-column:1/-1; cursor:crosshair; touch-action:pan-y; }
+.probe { display:flex; align-items:center; gap:14px; margin:12px 0 17px; }
+.probe label { color:#d4dce0; font-size:13px; }
+.probe input { flex:1; min-width:0; accent-color:var(--signal); }
+.calculation { border-top:1px solid #435057; }
+.calculation summary { color:#e5edee; font-weight:600; padding:12px 0; cursor:pointer; }
+#calculationBody { padding:4px 0 3px 14px; border-left:3px solid var(--signal); }
+#calcTitle { font-size:14px; color:#d9e2e5; }
+#calcFormula { margin:6px 0; font:500 clamp(14px,1.4vw,18px)/1.5 Consolas,monospace; color:var(--signal); }
+#calcExplain { font-size:14px; margin:0; }
+@media(max-width:650px) {
+  .lab-stage figure { grid-template-columns:minmax(0,1fr); }
+  .live-readings { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 12px; }
+}
+
+.station-context { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px 20px; margin:0 0 18px; }
+.station-context #frequencyNote { flex:1 1 230px; margin:0; color:#bdc9cd; font-size:14px; }
+#compareNow, #revealOutputs { color:#f2ead3; border:1px solid #766e58; background:#302e29; }
+#revealOutputs { margin:8px 0; }
+.lab-stage figure { padding:14px; border-top-color:#586871; background:linear-gradient(150deg,#151b24,#0a1116 70%); }
+.lab-stage figcaption { letter-spacing:.01em; }
+.point-reading { background:#262824; color:#f2ead3; border-radius:5px; padding:4px 7px; }
+#cursorMath { border-top:1px solid #384650; margin:10px 0 0; padding-top:10px; color:#f2ead3; font:14px/1.5 Consolas,monospace; }
+#comparison:has(+ #fmComparison:not([hidden])) { border-left:3px solid #bae6fd; }
+#fmComparison { border-left:3px solid #ffc69f; }
+@media(max-width:650px) { .point-reading { justify-self:start; } .lab-stage figure { padding:9px; } }

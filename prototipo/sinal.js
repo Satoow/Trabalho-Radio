@@ -1,7 +1,11 @@
-// Rádio DSB-SC: as duas estações compartilham o mesmo bloco de amostras.
+// A estação AM usa DSB-SC; a FM codifica o áudio na variação de fase.
 const RadioDSP = (() => {
   const fs = 48000, size = 262144, carriers = [8000, 16000], bandwidth = 3000;
   const tau = 2 * Math.PI;
+  const halfBands = [bandwidth, 4000], deviation = 600;
+  // Cada frase é tratada como periódica pela DFT. A portadora FM ocupa
+  // o bin mais próximo de 16 kHz para fechar a fase na emenda da frase.
+  const fmCarrier = Math.round(carriers[1]*size/fs)*fs/size;
   function fft(real, imag, inverse = false) {
     const n = real.length;
     for (let i = 1, j = 0; i < n; i++) {
@@ -39,21 +43,43 @@ const RadioDSP = (() => {
   }
   function transmit(a, b) {
     const real = new Float64Array(size), imag = new Float64Array(size);
-    for (let i = 0; i < size; i++) real[i] = a[i]*Math.cos(tau*carriers[0]*i/fs) + b[i]*Math.cos(tau*carriers[1]*i/fs);
+    const dc = b.reduce((sum, sample) => sum + sample, 0) / size;
+    let fmPhase = 0;
+    for (let i = 0; i < size; i++) {
+      fmPhase += tau*(fmCarrier+deviation*(b[i]-dc))/fs;
+      real[i] = a[i]*Math.cos(tau*carriers[0]*i/fs) + .40*Math.cos(fmPhase);
+    }
     const samples = real.slice();
     fft(real, imag);
     return {real, imag, samples};
   }
   function selectBand(mix, id) {
     const fc = carriers[id], real = mix.real.slice(), imag = mix.imag.slice();
-    for (let k = 0; k < size; k++) if (Math.abs(frequency(k)-fc) > bandwidth) real[k] = imag[k] = 0;
+    for (let k = 0; k < size; k++) if (Math.abs(frequency(k)-fc) > halfBands[id]) real[k] = imag[k] = 0;
     return {real, imag};
   }
   function demodulate({real, imag}, id, radioSamples) {
     const fc = carriers[id];
+    if (id === 1) {
+      // Espectro analítico: a parte real da inversa é o sinal passa-faixa;
+      // o par em quadratura permite medir o avanço de fase entre amostras.
+      for (let k=1; k<size/2; k++) { real[k]*=2; imag[k]*=2; }
+      real.fill(0,size/2); imag.fill(0,size/2);
+    }
     fft(real, imag, true);
     if (radioSamples) radioSamples.set(real);
-    for (let i = 0; i < size; i++) real[i] *= 2*Math.cos(tau*fc*i/fs);
+    if (id === 1) {
+      const lastReal=real[size-1];
+      for (let i=size-1; i>=0; i--) {
+        const previousReal = i ? real[i-1] : lastReal;
+        const previousImag = imag[(i+size-1)%size];
+        const dot=real[i]*previousReal+imag[i]*previousImag;
+        const cross=imag[i]*previousReal-real[i]*previousImag;
+        real[i]=(Math.atan2(cross,dot)*fs/tau-fmCarrier)/deviation;
+      }
+    } else {
+      for (let i = 0; i < size; i++) real[i] *= 2*Math.cos(tau*fc*i/fs);
+    }
     lowpass(real);
     return Float32Array.from(real);
   }
@@ -93,6 +119,6 @@ const RadioDSP = (() => {
     }
     return peaks;
   }
-  return {fs, size, carriers, bandwidth, lowpass, analyze, peakHz, frameSize, transmit, receive, selectBand, demodulate, spectrumPeaks};
+  return {fs, size, carriers, bandwidth, halfBands, deviation, lowpass, analyze, peakHz, frameSize, transmit, receive, selectBand, demodulate, spectrumPeaks};
 })();
 if (typeof module !== 'undefined') module.exports = RadioDSP;
